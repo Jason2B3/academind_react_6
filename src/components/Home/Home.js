@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Card from '../UI/Card/Card';
-import classes from './Home.module.css';
+import classes from './Home.module.scss';
 
 const Home = (props) => {
   return (
