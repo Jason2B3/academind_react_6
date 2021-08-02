@@ -14,10 +14,18 @@ const Login = (props) => {
   //% Check if both email and password are valid
   //% If so, set formIsValid= true (and vice versa)
   useEffect(() => {
-    const e = enteredEmail.includes("@");
-    const p = enteredPassword.trim().length > 6;
-    if (e && p) setFormIsValid(true);
-    else setFormIsValid(false);
+    const delayedCheck = setTimeout(() => {
+      //$ DEBOUNCE: runs after a 1 second gap after the latest key tap
+      console.log("Checking form validity RN"); 
+      if (enteredEmail.includes("@") && enteredPassword.trim().length > 6)
+        setFormIsValid(true);
+      else setFormIsValid(false);
+    }, 1000);
+    return () => {
+      //$ CLEANUP: Timer reset function runs after every key tap
+      console.log('cleanup') 
+      clearTimeout(delayedCheck)
+    }; 
   }, [enteredEmail, enteredPassword]);
 
   //% Change Handlers- they update email and password after a key tap

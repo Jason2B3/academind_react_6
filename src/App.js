@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     if (storedLoginStatus === "true") setIsLoggedIn(true);
   }, [storedLoginStatus]);
-  // holding storedLoginStatud gets rid of a non-fatal console error (dw, about this)
+  // holding storedLoginStatus gets rid of a non-fatal console error (dw, about this)
 
   //% Handlers
   const loginHandler = (email, password) => {
