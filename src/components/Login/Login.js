@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Card from '../UI/Card/Card';
-import classes from './Login.module.css';
-import Button from '../UI/Button/Button';
+import Card from "../UI/Card/Card";
+import classes from "./Login.module.css";
+import Button from "../UI/Button/Button";
 
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState('');
+  const [enteredEmail, setEnteredEmail] = useState("");
   const [emailIsValid, setEmailIsValid] = useState();
-  const [enteredPassword, setEnteredPassword] = useState('');
+  const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  //% Check if both email and password are valid
+  //% If so, set formIsValid= true (and vice versa)
+  useEffect(() => {
+    const e = enteredEmail.includes("@");
+    const p = enteredPassword.trim().length > 6;
+    if (e && p) setFormIsValid(true);
+    else setFormIsValid(false);
+  }, [enteredEmail, enteredPassword]);
+
+  //% Change Handlers- they update email and password after a key tap
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
-
-    setFormIsValid(
-      event.target.value.includes('@') && enteredPassword.trim().length > 6
-    );
   };
-
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
-
-    setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
-    );
   };
-
-  const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes('@'));
-  };
-
-  const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
-  };
-
+  //% Sets our login status to true in App.js
   const submitHandler = (event) => {
     event.preventDefault();
     props.onLogin(enteredEmail, enteredPassword);
+  };
+  //% Checks if email/password are valid
+  // If one isn't, lines 52 and 66 give their container diivs an invalid class
+  // The invalid class styles the form fields to become red
+  const validateEmailHandler = () => {
+    setEmailIsValid(enteredEmail.includes("@"));
+  };
+  const validatePasswordHandler = () => {
+    setPasswordIsValid(enteredPassword.trim().length > 6);
   };
 
   return (
@@ -45,7 +47,7 @@ const Login = (props) => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ''
+            emailIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="email">E-Mail</label>
@@ -59,7 +61,7 @@ const Login = (props) => {
         </div>
         <div
           className={`${classes.control} ${
-            passwordIsValid === false ? classes.invalid : ''
+            passwordIsValid === false ? classes.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
