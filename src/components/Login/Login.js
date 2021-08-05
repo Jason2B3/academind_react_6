@@ -51,15 +51,14 @@ const Login = (props) => {
   //$ Supply state properties (isValid) as useEffect dependencies instead of the entire state object
   // Makes it so useEffect only runs when their validities change
   // No more unneeded verification after we know both password/email are valid already
-  const { isValid: emailIsValid } = emailState;
-  const { isValid: passwordIsValid } = passwordState;
+
   //% Check if both email and password are valid, after a 1s time gap after typing
   //% If they are, set formIsValid= true (and vice versa)
   useEffect(() => {
     const delayedCheck = setTimeout(() => {
       // DEBOUNCE: runs after a 1 second gap after the latest key tap
       console.log("Checking form validity RN");
-      if (emailIsValid && passwordIsValid) setFormIsValid(true);
+      if (emailState.isValid && passwordState.isValid) setFormIsValid(true);
       else setFormIsValid(false);
     }, 1000);
     return () => {
@@ -67,7 +66,7 @@ const Login = (props) => {
       console.log("cleanup");
       clearTimeout(delayedCheck);
     };
-  }, [emailIsValid, passwordIsValid]);
+  }, [emailState.isValid, passwordState.isValid]);
 
   //% After each keytap, invoke email reducerFn ON_CHANGE actions
   const emailChangeHandler = (event) => {
