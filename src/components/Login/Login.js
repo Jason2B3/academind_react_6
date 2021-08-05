@@ -48,18 +48,18 @@ const Login = (props) => {
     value: "", // initial state object
     isValid: true, // initialize as true, so that we don't get red fields on startup
   });
-
+  //$ Supply state properties (isValid) as useEffect dependencies instead of the entire state object
+  // Makes it so useEffect only runs when their validities change
+  // No more unneeded verification after we know both password/email are valid already
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
   //% Check if both email and password are valid, after a 1s time gap after typing
   //% If they are, set formIsValid= true (and vice versa)
   useEffect(() => {
     const delayedCheck = setTimeout(() => {
       // DEBOUNCE: runs after a 1 second gap after the latest key tap
       console.log("Checking form validity RN");
-      if (
-        emailState.value.includes("@") &&
-        passwordState.value.trim().length > 6
-      )
-        setFormIsValid(true);
+      if (emailIsValid && passwordIsValid) setFormIsValid(true);
       else setFormIsValid(false);
     }, 1000);
     return () => {
@@ -67,7 +67,7 @@ const Login = (props) => {
       console.log("cleanup");
       clearTimeout(delayedCheck);
     };
-  }, [emailState, passwordState]);
+  }, [emailIsValid, passwordIsValid]);
 
   //% After each keytap, invoke email reducerFn ON_CHANGE actions
   const emailChangeHandler = (event) => {
@@ -75,7 +75,7 @@ const Login = (props) => {
   };
   //% After losing a form field's focus, invoke email reducerFn ON_BLUR actions
   const validateEmailHandler = () => {
-    dispatchEmail({ type: "ON_BLUR" }); 
+    dispatchEmail({ type: "ON_BLUR" });
   };
   //% After each keytap, invoke password reducerFn ON_CHANGE actions
   const passwordChangeHandler = (event) => {
@@ -83,7 +83,7 @@ const Login = (props) => {
   };
   //% After losing a form field's focus, invoke password reducerFn ON_BLUR actions
   const validatePasswordHandler = () => {
-    dispatchPassword({ type: "ON_BLUR" }); 
+    dispatchPassword({ type: "ON_BLUR" });
   };
   const submitHandler = (event) => {
     event.preventDefault();
